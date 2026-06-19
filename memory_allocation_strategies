@@ -1,0 +1,96 @@
+#include <stdio.h>
+
+int main()
+{
+    int mp[20], ps[20], m, n, choice, i, j;
+    int allocated[20] = {0};
+
+    printf("Number of memory partition : ");
+    scanf("%d", &m);
+
+    printf("Number of process : ");
+    scanf("%d", &n);
+
+    printf("Enter the memory partitions :\n");
+    for(i = 0; i < m; i++)
+        scanf("%d", &mp[i]);
+
+    printf("Enter process size :\n");
+    for(i = 0; i < n; i++)
+        scanf("%d", &ps[i]);
+
+    printf("\n1. Firstfit\t2. Bestfit\t3. Worstfit\n");
+    printf("Enter your choice : ");
+    scanf("%d", &choice);
+
+    switch(choice)
+    {
+        case 1:     // First Fit
+            for(i = 0; i < n; i++)
+            {
+                for(j = 0; j < m; j++)
+                {
+                    if(!allocated[j] && mp[j] >= ps[i])
+                    {
+                        printf("%d fits in %d\n", ps[i], mp[j]);
+                        allocated[j] = 1;
+                        break;
+                    }
+                }
+                if(j == m)
+                    printf("%d must wait for its process\n", ps[i]);
+            }
+            break;
+
+        case 2:     // Best Fit
+            for(i = 0; i < n; i++)
+            {
+                int best = -1;
+                for(j = 0; j < m; j++)
+                {
+                    if(!allocated[j] && mp[j] >= ps[i])
+                    {
+                        if(best == -1 || mp[j] < mp[best])
+                            best = j;
+                    }
+                }
+
+                if(best != -1)
+                {
+                    printf("%d fits in %d\n", ps[i], mp[best]);
+                    allocated[best] = 1;
+                }
+                else
+                    printf("%d must wait for its process\n", ps[i]);
+            }
+            break;
+
+        case 3:     // Worst Fit
+            for(i = 0; i < n; i++)
+            {
+                int worst = -1;
+                for(j = 0; j < m; j++)
+                {
+                    if(!allocated[j] && mp[j] >= ps[i])
+                    {
+                        if(worst == -1 || mp[j] > mp[worst])
+                            worst = j;
+                    }
+                }
+
+                if(worst != -1)
+                {
+                    printf("%d fits in %d\n", ps[i], mp[worst]);
+                    allocated[worst] = 1;
+                }
+                else
+                    printf("%d must wait for its process\n", ps[i]);
+            }
+            break;
+
+        default:
+            printf("Invalid choice");
+    }
+
+    return 0;
+}
